@@ -37,6 +37,8 @@ public class Producer {
 
     @PostConstruct
     public void init() {
+        System.err.println("WIE ARE IN INIT!!!!!!!!!!!!");
+
         this.properties = new Properties();
         final InputStream stream = Producer.class.getResourceAsStream("/application.properties");
         if (stream == null) {

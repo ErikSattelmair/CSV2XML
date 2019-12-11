@@ -24,15 +24,12 @@ import java.util.stream.IntStream;
 public class CSV2XMLConverterServiceImpl implements CSV2XMLConverterService {
 
     @Property("default.root.element.name")
-    @Inject
     private String defaultRootNodeName;
 
     @Property("default.row.element.name")
-    @Inject
     private String defaultRowNodeName;
 
     @Property("default.seperator")
-    @Inject
     private String defaultDelimiter;
 
     @Named("csvValidator")
