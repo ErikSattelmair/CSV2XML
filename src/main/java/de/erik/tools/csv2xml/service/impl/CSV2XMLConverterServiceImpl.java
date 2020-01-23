@@ -10,7 +10,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,7 +36,7 @@ public class CSV2XMLConverterServiceImpl implements CSV2XMLConverterService {
 
     @Override
     public byte[] convertCSV2XML(final byte[] csv, final String delimiter, final boolean header, final String rootElementName, final String rowNodeName) throws ParserConfigurationException {
-        final String csvDelimiter = StringUtils.defaultString(delimiter, this.defaultDelimiter);
+        final String csvDelimiter = defaultString(delimiter, this.defaultDelimiter);
 
         if(!this.csvValidationService.isCSVvalid(csv, csvDelimiter)) {
             log.error("CSV data is invalid");
@@ -48,16 +47,16 @@ public class CSV2XMLConverterServiceImpl implements CSV2XMLConverterService {
         final DocumentBuilder builder = factory.newDocumentBuilder();
         final Document result = builder.newDocument();
 
-        final String xmlRootElementName = StringUtils.isNotBlank(rootElementName) ? rootElementName : this.defaultRootNodeName;
+        final String xmlRootElementName = defaultString(rootElementName, this.defaultRootNodeName);
         final Element root = result.createElement(xmlRootElementName);
 
         final String[] rows = new String(csv).split("\n");
-        final String xmlRowElementName = StringUtils.isNotBlank(rowNodeName) ? rowNodeName : this.defaultRowNodeName;
+        final String xmlRowElementName = defaultString(rowNodeName, this.defaultRowNodeName);
         final String[] rowElementNames = extractRowElementNames(rows[0].split(csvDelimiter), header);
 
         for(final String row : rows) {
             final Element rowNode = result.createElement(xmlRowElementName);
-            final String[] rowElements = row.split("\n");
+            final String[] rowElements = row.split(delimiter);
 
             for(int i=0; i<rowElements.length; i++) {
                 final Element rowElement = result.createElement(rowElementNames[i]);
@@ -75,7 +74,11 @@ public class CSV2XMLConverterServiceImpl implements CSV2XMLConverterService {
             return headerRow;
         }
 
-        return (String[]) IntStream.range(0, headerRow.length).mapToObj(num -> "element" + num).toArray();
+        return (String[]) IntStream.range(0, headerRow.length).mapToObj(num -> "element_" + num).toArray();
+    }
+
+    private String defaultString(final String value, final String defaultValue) {
+        return StringUtils.isNotBlank(value) ? value : defaultValue;
     }
 
 }

@@ -12,19 +12,17 @@
 
     <!-- Jersey Servlet configurations -->
     <servlet>
-        <servlet-name>my-servlet-name</servlet-name>
-        <servlet-class>
-            com.sun.jersey.spi.container.servlet.ServletContainer
-        </servlet-class>
+        <servlet-name>RestServlet</servlet-name>
+        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>my.package.name</param-value>
+            <param-value>de.erik.tools.csv2xml.controller</param-value>
         </init-param>
-        <!-- <load-on-startup>1</load-on-startup> -->
+        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>my-servlet-name</servlet-name>
+        <servlet-name>RestServlet</servlet-name>
         <url-pattern>/api/rest/*</url-pattern>
     </servlet-mapping>
     <!-- Jersey Servlet configurations -->
