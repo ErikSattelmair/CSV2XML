@@ -1,13 +1,12 @@
 package de.erik.tools.csv2xml.controller;
 
+import de.erik.tools.csv2xml.ResponseUtils;
 import de.erik.tools.csv2xml.service.CSV2XMLConverterService;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.xml.parsers.ParserConfigurationException;
 
 @Path("/csv")
@@ -17,12 +16,17 @@ public class RestAPI {
     private CSV2XMLConverterService csv2XMLConverterService;
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_XML)
     @Path("/converter/xml")
-    public byte[] convertCSVtoXML(final byte[] csvContent, final String delimiter, final boolean header,
-                                  final String rootElementName, final String rowElementName) throws ParserConfigurationException {
-        return this.csv2XMLConverterService.convertCSV2XML(csvContent, delimiter, header, rootElementName, rowElementName);
+    public Response convertCSVtoXML(final String csvContent,
+                                      @QueryParam("delimiter") final String delimiter,
+                                      @QueryParam("header") final boolean header,
+                                      @QueryParam("rootElement") final String rootElement,
+                                      @QueryParam("rowElement") final String rowElement) throws ParserConfigurationException {
+        return ResponseUtils.createResponse(
+                this.csv2XMLConverterService.convertCSV2XML(csvContent.getBytes(), delimiter, false, rootElement, rowElement),
+                Response.Status.OK);
     }
 
 }

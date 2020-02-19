@@ -1,23 +1,21 @@
 package de.erik.tools.csv2xml.service.impl;
 
 import de.erik.tools.csv2xml.service.CSVValidationService;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import java.util.Arrays;
 
-@Named("csvValidator")
-@ApplicationScoped
+@Named
 public class CSVValidationServiceImpl implements CSVValidationService {
 
     @Override
-    public boolean isCSVvalid(final byte[] csv, final String delimiter) {
-        if(csv == null || csv.length == 0) {
+    public boolean isCSVvalid(final String csv, final String delimiter) {
+        if(StringUtils.isBlank(csv)) {
             return false;
         }
 
-        final String csvContent = new String(csv);
-        final String[] rows = csvContent.split("\n");
+        final String[] rows = csv.split("\n");
 
         if(rows.length == 0) {
             return false;
